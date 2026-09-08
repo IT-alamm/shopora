@@ -1,0 +1,29 @@
+# Secrets — NEVER commit (real passwords + Razorpay keys)
+local-env.ps1
+
+# Frontend env (API base etc.)
+.env
+storefront/.env
+frontend/shopora/.env
+
+# Build outputs
+target/
+dist/
+build/
+out/
+
+# Dependencies
+node_modules/
+
+# Logs + OS/IDE
+*.log
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.iml
+
+# Java
+*.class
+*.jar
+*.war
