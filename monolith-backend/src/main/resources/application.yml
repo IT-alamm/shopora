@@ -1,0 +1,30 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: shopora-monolith
+  datasource:
+    url: "jdbc:postgresql://${SUPABASE_DB_HOST:aws-0-ap-south-1.pooler.supabase.com}:${SUPABASE_DB_PORT:5432}/${SUPABASE_DB_NAME:postgres}?sslmode=require"
+    username: ${SUPABASE_DB_USER:postgres.woncksnkimbgofnuremh}
+    password: ${SUPABASE_DB_PASSWORD:}
+    hikari:
+      maximum-pool-size: 5
+      minimum-idle: 0
+      connection-timeout: 15000
+      idle-timeout: 30000
+      max-lifetime: 600000
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate:
+        default_schema: public
+razorpay:
+  key:
+    id: ${RAZORPAY_KEY_ID:rzp_test_dummy_key}
+    secret: ${RAZORPAY_KEY_SECRET:dummy-secret-not-for-production}
+
+jwt:
+  secret: ${JWT_SECRET:dev-secret-key-please-override-min-32-chars-1234567890}
+  expiration-ms: 86400000
