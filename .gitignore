@@ -27,3 +27,11 @@ Thumbs.db
 *.class
 *.jar
 *.war
+
+# Environment files and secrets (keep example templates only)
+.env.env.*
+!.env.example
+storefront/.env
+storefront/.env.*
+!storefront/.env.example
+

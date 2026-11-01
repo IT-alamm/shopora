@@ -1,0 +1,23 @@
+services:
+  shopora-backend:
+    build:
+      context: ./monolith-backend
+      dockerfile: Dockerfile
+    image: shopora-backend:latest
+    container_name: shopora-backend
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      SERVER_PORT: 8080
+      SUPABASE_DB_HOST: ${SUPABASE_DB_HOST:-aws-0-ap-south-1.pooler.supabase.com}
+      SUPABASE_DB_PORT: ${SUPABASE_DB_PORT:-5432}
+      SUPABASE_DB_NAME: ${SUPABASE_DB_NAME:-postgres}
+      SUPABASE_DB_USER: ${SUPABASE_DB_USER:-postgres.woncksnkimbgofnuremh}
+      SUPABASE_DB_PASSWORD: ${SUPABASE_DB_PASSWORD:?Set SUPABASE_DB_PASSWORD in the ignored root .env file}
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in the ignored root .env file}
+      RAZORPAY_KEY_ID: ${RAZORPAY_KEY_ID:-}
+      RAZORPAY_KEY_SECRET: ${RAZORPAY_KEY_SECRET:-}
+      RAZORPAY_WEBHOOK_SECRET: ${RAZORPAY_WEBHOOK_SECRET:-}
+    ports:
+      - "${SHOPORA_PORT:-8080}:8080"
