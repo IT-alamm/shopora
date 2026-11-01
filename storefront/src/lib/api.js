@@ -1,5 +1,5 @@
-// Backend client -> Spring Gateway. Base from VITE_API_BASE (default localhost:8080).
-const API_BASE = (import.meta.env.VITE_API_BASE || "http://localhost:8080").replace(/\/$/, "");
+// Shopora backend. Override VITE_API_BASE in the frontend host when needed.
+const API_BASE = (import.meta.env.VITE_API_BASE || "https://shopora-3.onrender.com").replace(/\/$/, "");
 
 export const ASSETS = {
   logo: "/assets/home_catalog/img_1.jpg",
