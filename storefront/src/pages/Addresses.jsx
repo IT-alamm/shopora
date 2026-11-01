@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Addresses } from "../lib/api";
+import SEO from "../components/SEO.jsx";
 
 const EMPTY = { name: "", phone: "", pincode: "", addressLine: "", city: "", state: "", type: "HOME", isDefault: false };
 
@@ -28,11 +29,11 @@ export default function AddressesPage() {
           state: g.principalSubdivision || f.state,
           pincode: String(g.postcode || f.pincode || "").replace(/\D/g, "").slice(0, 6),
         }));
-        setLocStatus(`Live location locked: ${latitude.toFixed(4)}, ${longitude.toFixed(4)} — verify & save`);
+        setLocStatus(`Live location locked: ${latitude.toFixed(4)}, ${longitude.toFixed(4)} â€” verify & save`);
       } catch {
-        setLocStatus(`Coords: ${latitude.toFixed(4)}, ${longitude.toFixed(4)} (lookup failed — fill manually)`);
+        setLocStatus(`Coords: ${latitude.toFixed(4)}, ${longitude.toFixed(4)} (lookup failed â€” fill manually)`);
       }
-    }, () => setLocStatus("Location permission denied — allow location in the browser address bar"),
+    }, () => setLocStatus("Location permission denied â€” allow location in the browser address bar"),
       { enableHighAccuracy: true, timeout: 15000 });
   };
 
@@ -61,9 +62,11 @@ export default function AddressesPage() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto px-6 py-10">
+    <>
+      <SEO title="Saved addresses" description="Manage your Shopora delivery addresses." path="/addresses" noindex />
+      <div className="max-w-3xl mx-auto px-6 py-10">
       <h1 className="font-[Noto_Serif] text-3xl mb-6">My addresses</h1>
-      {error && <p className="text-red-600 text-sm mb-3">{error} — <Link className="underline" to="/auth">sign in first</Link></p>}
+      {error && <p className="text-red-600 text-sm mb-3">{error} â€” <Link className="underline" to="/auth">sign in first</Link></p>}
       {msg && <p className="text-green-700 text-sm mb-3">{msg}</p>}
 
       {list.map((a) => (
@@ -81,7 +84,7 @@ export default function AddressesPage() {
           </div>
         </div>
       ))}
-      {list.length === 0 && !error && <p className="text-gray-500 text-sm mb-4">No addresses yet — add your first delivery address below.</p>}
+      {list.length === 0 && !error && <p className="text-gray-500 text-sm mb-4">No addresses yet â€” add your first delivery address below.</p>}
 
       {!showForm && !editingId ? (
         <button onClick={() => setShowForm(true)}
@@ -93,7 +96,7 @@ export default function AddressesPage() {
       <h2 className="font-[Noto_Serif] text-xl mt-8 mb-4">{editingId ? "Edit address" : "Add a new address"}</h2>
       <button type="button" onClick={useLiveLocation}
         className="mb-3 px-5 py-2 border border-black rounded-full text-sm hover:bg-black hover:text-white transition-colors">
-        📍 Use my live location
+        ðŸ“ Use my live location
       </button>
       {locStatus && <p className="text-xs text-gray-600 mb-3">{locStatus}</p>}
       <form onSubmit={submit} className="bg-white border border-[#e3e2e3] rounded-xl p-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -119,5 +122,10 @@ export default function AddressesPage() {
       </>
       )}
     </div>
+    </>
   );
 }
+
+
+
+

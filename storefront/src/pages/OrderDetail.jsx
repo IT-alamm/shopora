@@ -1,6 +1,8 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
+import { formatPrice } from "../lib/api";
 import { Link, useParams } from "react-router-dom";
 import { Orders, Products, store } from "../lib/api";
+import SEO from "../components/SEO.jsx";
 
 const STEPS = ["PAYMENT_PENDING", "CONFIRMED", "PROCESSING", "SHIPPED", "DELIVERED"];
 
@@ -37,7 +39,7 @@ export default function OrderDetail() {
       h1{font-size:28px}table{width:100%;border-collapse:collapse;margin:20px 0}
       th,td{border:1px solid #ccc;padding:8px;text-align:left}th{background:#f5f5f5}
       .meta{color:#555;font-size:14px}.total{text-align:right;font-size:18px;margin-top:10px}</style></head>
-      <body><h1>Shopora — Tax Invoice</h1>
+      <body><h1>Shopora â€” Tax Invoice</h1>
       <p class="meta">Order ID: ${order.id}<br>Status: ${order.status}<br>
       Customer: ${store.email || ""}<br>Ship to: ${order.shippingAddress || ""}<br>
       Generated: ${new Date().toLocaleString("en-IN")}</p>
@@ -50,14 +52,16 @@ export default function OrderDetail() {
     w.document.close();
   };
 
-  if (error) return <p className="p-10 text-red-600">{error} — <Link className="underline" to="/orders">back</Link></p>;
+  if (error) return <p className="p-10 text-red-600">{error} â€” <Link className="underline" to="/orders">back</Link></p>;
   if (!order) return <p className="p-10">Loading order...</p>;
 
   const stepIdx = order.status === "CANCELLED" ? -1 : STEPS.indexOf(order.status);
 
   return (
-    <div className="max-w-3xl mx-auto px-6 py-10">
-      <Link to="/orders" className="text-sm underline text-gray-500">← All orders</Link>
+    <>
+      <SEO title="Order details" description="View details for your Shopora order." path={`/orders/${id}`} noindex />
+      <div className="max-w-3xl mx-auto px-6 py-10">
+      <Link to="/orders" className="text-sm underline text-gray-500">â† All orders</Link>
       <div className="flex items-start justify-between mt-3 mb-6">
         <div>
           <h1 className="font-[Noto_Serif] text-3xl">Order {order.id}</h1>
@@ -91,13 +95,13 @@ export default function OrderDetail() {
               <Link to={`/product/${i.productId}`} className="font-medium hover:underline">
                 {i.productName || names[i.productId] || `Product ${i.productId}`}
               </Link>
-              <p className="text-sm text-gray-500">Qty {i.quantity} × ₹{i.price}</p>
+              <p className="text-sm text-gray-500">Qty {i.quantity} · {formatPrice(i.price)}</p>
             </div>
-            <p>₹{i.lineTotal}</p>
+            <p>{formatPrice(i.lineTotal)}</p>
           </div>
         ))}
         <div className="px-5 py-4 flex justify-between font-medium text-lg bg-[#faf9fa]">
-          <span>Total</span><span>₹{order.totalAmount}</span>
+          <span>Total</span><span>{formatPrice(order.totalAmount)}</span>
         </div>
       </div>
 
@@ -106,5 +110,13 @@ export default function OrderDetail() {
         Download invoice
       </button>
     </div>
+    </>
   );
 }
+
+
+
+
+
+
+

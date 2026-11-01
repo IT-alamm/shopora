@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Products, Cart, ASSETS, productImage } from "../lib/api";
+import { Products, Cart, ASSETS, productImage, formatPrice } from "../lib/api";
+import SEO from "../components/SEO.jsx";
 
 // Fallback specs when backend specifications are not seeded yet.
 function fallbackSpecs(p) {
-  const base = { Brand: "Shopora", Model: p.name, Category: p.categoryName || "-", Price: `₹${p.price}` };
+  const base = { Brand: "Shopora", Model: p.name, Category: p.categoryName || "-", Price: formatPrice(p.price) };
   const cat = (p.categoryName || "").toLowerCase();
   if (cat.includes("electronic")) return { ...base, Warranty: "1 Year", "In-box": `1 x ${p.name}` };
   if (cat.includes("cloth")) return { ...base, Fabric: "Premium blend", Fit: "Regular", Care: "Machine wash", Sizes: "S to XXL" };
@@ -34,28 +35,28 @@ export default function ProductDetail() {
     e.preventDefault();
     if (!/^\d{6}$/.test(pin)) { setDelivery("Enter a valid 6-digit pincode"); return; }
     const d = new Date(Date.now() + 4 * 864e5).toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short" });
-    setDelivery(`Delivery to ${pin} by ${d} · Free above ₹499 · COD available`);
+    setDelivery(`Delivery to ${pin} by ${d} Â· Free above â‚¹499 Â· COD available`);
   };
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-10">
+      <SEO title={p.name} path={`/product/${p.id}`} description={p.description || `Shop ${p.name} at Shopora.`} type="product" image={productImage(p, Number(id) || 0)} structuredData={{ "@context": "https://schema.org", "@type": "Product", name: p.name, description: p.description || `${p.name} available at Shopora.`, image: new URL(productImage(p, Number(id) || 0), window.location.origin).href, brand: { "@type": "Brand", name: "Shopora" }, offers: { "@type": "Offer", priceCurrency: "INR", price: Number(p.price), availability: outOfStock ? "https://schema.org/OutOfStock" : "https://schema.org/InStock", url: `${window.location.origin}/product/${p.id}` } }} />
       <div className="grid lg:grid-cols-2 gap-10">
         <div>
-          <img src={productImage(p, Number(id) || 0)} alt={p.name}
-            className="rounded-xl w-full h-[28rem] object-cover"
+          <img src={productImage(p, Number(id) || 0)} alt={p.name} width="800" height="900" fetchPriority="high" decoding="async" className="rounded-xl w-full h-[28rem] object-cover"
             onError={(e) => { e.currentTarget.src = ASSETS.product(2); }} />
           <div className="grid grid-cols-3 gap-3 mt-3">
             {[3, 4, 5].map((n) => (
-              <img key={n} src={ASSETS.product(n)} alt="Atelier detail" className="rounded-lg h-28 w-full object-cover" />
+              <img key={n} src={ASSETS.product(n)} alt="Atelier detail" width="240" height="112" loading="lazy" decoding="async" className="rounded-lg h-28 w-full object-cover" />
             ))}
           </div>
         </div>
         <div>
           <p className="text-[11px] tracking-widest uppercase text-gray-500">{p.categoryName}</p>
           <h1 className="font-[Noto_Serif] text-4xl mt-2">{p.name}</h1>
-          <p className="text-2xl mt-3">₹{p.price}</p>
+          <p className="text-2xl mt-3">{formatPrice(p.price)}</p>
           <p className={`text-sm mt-1 ${outOfStock ? "text-red-600 font-medium" : "text-gray-500"}`}>
-            {outOfStock ? "Out of stock" : `Stock: ${p.stock} · ${p.active ? "Available" : "Inactive"}`}
+            {outOfStock ? "Out of stock" : `Stock: ${p.stock} Â· ${p.active ? "Available" : "Inactive"}`}
           </p>
           <p className="text-gray-600 mt-4">{p.description}</p>
 
@@ -116,3 +117,13 @@ export default function ProductDetail() {
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
+

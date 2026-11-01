@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Cart, Orders, Payments, Addresses, formatAddress, ASSETS } from "../lib/api";
+import SEO from "../components/SEO.jsx";
 
 export default function Checkout() {
   const location = useLocation();
@@ -39,7 +40,7 @@ export default function Checkout() {
         setStatus("Creating order (stock reserve)...");
       }
       const order = await Orders.create(items, chosenAddress());
-      setStatus(`Order ${order.id} PAYMENT_PENDING — creating Razorpay TEST order...`);
+      setStatus(`Order ${order.id} PAYMENT_PENDING â€” creating Razorpay TEST order...`);
       const pay = await Payments.createOrder(order.id, order.totalAmount);
       setStatus("Opening Razorpay Checkout (TEST mode, no real money)...");
       Payments.pay({
@@ -50,8 +51,8 @@ export default function Checkout() {
           setStatus("Verifying signature on backend...");
           const v = await Payments.verify(resp.razorpay_order_id, resp.razorpay_payment_id, resp.razorpay_signature);
           setStatus(v.success
-            ? `Payment ${v.status} ✓ — order ${order.id} CONFIRMED automatically. See Orders page.`
-            : "Signature invalid — payment rejected.");
+            ? `Payment ${v.status} âœ“ â€” order ${order.id} CONFIRMED automatically. See Orders page.`
+            : "Signature invalid â€” payment rejected.");
         },
         onFail: (e) => setStatus("Payment failed/dismissed: " + (e?.message || e?.description || e)),
       });
@@ -59,12 +60,14 @@ export default function Checkout() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-10 grid lg:grid-cols-2 gap-10">
+    <>
+      <SEO title="Checkout" description="Complete your Shopora order securely." path="/checkout" noindex />
+      <div className="max-w-6xl mx-auto px-6 py-10 grid lg:grid-cols-2 gap-10">
       <div>
         <h1 className="font-[Noto_Serif] text-3xl mb-6">Secure payment</h1>
         {directItems && (
           <p className="text-sm bg-white border rounded-lg p-3 mb-4">
-            Buy Now — {directItems.length} item(s), qty {directItems[0]?.quantity} (cart untouched)
+            Buy Now â€” {directItems.length} item(s), qty {directItems[0]?.quantity} (cart untouched)
           </p>
         )}
         <label className="text-sm font-medium">Delivery address</label>
@@ -102,10 +105,15 @@ export default function Checkout() {
           Pay with Razorpay (TEST)
         </button>
         {status && <p className="mt-4 text-sm bg-white border rounded-lg p-3">{status}</p>}
-        <p className="text-xs text-gray-500 mt-3">Secret key never leaves the backend — frontend only gets keyId + order id.</p>
+        <p className="text-xs text-gray-500 mt-3">Secret key never leaves the backend â€” frontend only gets keyId + order id.</p>
       </div>
       <img src={ASSETS.checkout(1)} alt="Secure payment" className="rounded-xl object-cover w-full hidden lg:block"
         onError={(e) => { e.currentTarget.style.display = "none"; }} />
     </div>
+    </>
   );
 }
+
+
+
+

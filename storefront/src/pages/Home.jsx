@@ -1,14 +1,15 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { Products, Cart, ASSETS, productImage } from "../lib/api";
+import { Products, Cart, ASSETS, productImage, formatPrice } from "../lib/api";
+import SEO from "../components/SEO.jsx";
 
 const SLIDES = [
   {
-    kicker: "Vol. XIV — Limited Release",
+    kicker: "Vol. XIV â€” Limited Release",
     titleA: "Spring/Summer ",
     accent: "Craftsmanship",
     titleB: " Editions",
-    copy: "Hand-stitched Tuscan calfskin, bespoke tailoring, and kiln-fired vessels — live from our catalog service.",
+    copy: "Hand-stitched Tuscan calfskin, bespoke tailoring, and kiln-fired vessels â€” live from our catalog service.",
     img: ASSETS.homeHero,
     alt: "Atelier craftsman",
     cta: "Explore curation",
@@ -19,7 +20,7 @@ const SLIDES = [
     titleA: "Dressed with ",
     accent: "Intent",
     titleB: "",
-    copy: "Sculpted trench coats, handloom kurtas and sharp denim — clothing cut for every occasion.",
+    copy: "Sculpted trench coats, handloom kurtas and sharp denim â€” clothing cut for every occasion.",
     img: ASSETS.home(10),
     alt: "Tailored blazer look",
     cta: "Shop clothing",
@@ -30,7 +31,7 @@ const SLIDES = [
     titleA: "Leather goods, ",
     accent: "for life",
     titleB: "",
-    copy: "Briefcases, journals and desk sets burnished by hand — icons that age beautifully with you.",
+    copy: "Briefcases, journals and desk sets burnished by hand â€” icons that age beautifully with you.",
     img: ASSETS.home(12),
     alt: "Leather briefcase",
     cta: "Shop the icons",
@@ -62,13 +63,13 @@ function HeroCarousel() {
           </Link>
         </div>
         <div className="relative" key={"m" + i}>
-          <img src={s.img} alt={s.alt} className="rounded-xl object-cover w-full h-96" />
+          <img src={s.img} alt={s.alt} width="720" height="480" fetchPriority={i === 0 ? "high" : "auto"} decoding="async" className="rounded-xl object-cover w-full h-96" />
           <button aria-label="Previous slide"
             onClick={() => setI((i - 1 + SLIDES.length) % SLIDES.length)}
-            className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 shadow text-lg">‹</button>
+            className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 shadow text-lg">â€¹</button>
           <button aria-label="Next slide"
             onClick={() => setI((i + 1) % SLIDES.length)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 shadow text-lg">›</button>
+            className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 shadow text-lg">â€º</button>
           <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
             {SLIDES.map((_, d) => (
               <button key={d} aria-label={`Go to slide ${d + 1}`} onClick={() => setI(d)}
@@ -116,16 +117,17 @@ export default function Home() {
   const items = data?.content ?? [];
   return (
     <div>
+      <SEO title="Curated fashion and everyday essentials" path="/" description="Shop thoughtfully curated clothing, accessories, and everyday essentials at Shopora. Explore our latest collections and shop online." image={ASSETS.homeHero} />
       <HeroCarousel />
 
       <section className="max-w-7xl mx-auto px-6 py-12">
-        {error && <p className="text-red-600 mb-4">{error} — is gateway :8080 running?</p>}
+        {error && <p className="text-red-600 mb-4">{error} â€” is gateway :8080 running?</p>}
         {msg && (
         <div className="fixed top-24 left-1/2 -translate-x-1/2 z-50 bg-black text-white text-sm px-6 py-3 rounded-full shadow-lg">
-          {msg} — <Link to="/cart" className="underline">View Cart</Link>
+          {msg} â€” <Link to="/cart" className="underline">View Cart</Link>
         </div>
       )}
-        {/* Collections — category pills */}
+        {/* Collections â€” category pills */}
         <div className="flex flex-wrap gap-2 mb-8">
           <button
             onClick={() => pickCategory(null)}
@@ -144,13 +146,12 @@ export default function Home() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {items.map((p, i) => (
             <div key={p.id} className="bg-white border border-[#e3e2e3] rounded-xl overflow-hidden shadow-sm">
-              <img src={productImage(p, i)} alt={p.name}
-                className="h-64 w-full object-cover"
+              <img src={productImage(p, i)} alt={p.name} width="640" height="640" loading="lazy" decoding="async" className="h-64 w-full object-cover"
                 onError={(e) => { e.currentTarget.src = ASSETS.home(4 + (i % 8)); }} />
               <div className="p-5">
-                <p className="text-[11px] tracking-widest uppercase text-gray-500">{p.categoryName} · Stock {p.stock}</p>
+                <p className="text-[11px] tracking-widest uppercase text-gray-500">{p.categoryName} Â· Stock {p.stock}</p>
                 <h2 className="font-[Noto_Serif] text-xl mt-1">{p.name}</h2>
-                <p className="text-lg mt-2">₹{p.price}</p>
+                <p className="text-lg mt-2">{formatPrice(p.price)}</p>
                 <div className="flex gap-2 mt-4">
                   <Link to={`/product/${p.id}`} className="px-4 py-2 border rounded-full text-sm">View</Link>
                   <button
@@ -166,8 +167,18 @@ export default function Home() {
             </div>
           ))}
         </div>
-        {items.length === 0 && !error && <p className="text-gray-500">No products yet — create some via product-service.</p>}
+        {items.length === 0 && !error && <p className="text-gray-500">No products yet â€” create some via product-service.</p>}
       </section>
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
+

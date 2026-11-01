@@ -1,6 +1,8 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
+import { formatPrice } from "../lib/api";
 import { Link, useNavigate } from "react-router-dom";
 import { Cart } from "../lib/api";
+import SEO from "../components/SEO.jsx";
 
 export default function CartPage() {
   const nav = useNavigate();
@@ -41,11 +43,13 @@ export default function CartPage() {
     nav("/checkout", { state: { items: [{ productId: item.productId, quantity: item.quantity }] } });
   };
 
-  if (error) return <p className="p-10 text-red-600">{error} — <Link className="underline" to="/auth">sign in first</Link></p>;
+  if (error) return <p className="p-10 text-red-600">{error} â€” <Link className="underline" to="/auth">sign in first</Link></p>;
   if (!cart) return <p className="p-10">Loading shopping bag...</p>;
 
   return (
-    <div className="max-w-3xl mx-auto px-6 py-10">
+    <>
+      <SEO title="Shopping cart" description="Review the items in your Shopora shopping cart." path="/cart" noindex />
+      <div className="max-w-3xl mx-auto px-6 py-10">
       <h1 className="font-[Noto_Serif] text-3xl mb-6">Shopping bag</h1>
       {msg && <p className="text-sm mb-4 text-red-600">{msg}</p>}
       {cart.items.map((i) => (
@@ -53,15 +57,15 @@ export default function CartPage() {
           <div className="flex items-center justify-between">
             <div>
               <p className="font-medium">{i.productName || `Product ${i.productId}`}</p>
-              <p className="text-sm text-gray-500">₹{i.price} each</p>
+              <p className="text-sm text-gray-500">{formatPrice(i.price)} each</p>
             </div>
-            <p className="font-medium">₹{i.lineTotal}</p>
+            <p className="font-medium">{formatPrice(i.lineTotal)}</p>
           </div>
           <div className="flex items-center gap-2 mt-3">
             <div className="flex items-center border rounded-full">
               <button disabled={busyId === i.id}
                 className="px-3 py-1 text-lg disabled:opacity-40"
-                onClick={() => changeQty(i, -1)}>−</button>
+                onClick={() => changeQty(i, -1)}>âˆ’</button>
               <span className="w-8 text-center text-sm">{i.quantity}</span>
               <button disabled={busyId === i.id}
                 className="px-3 py-1 text-lg disabled:opacity-40"
@@ -77,12 +81,19 @@ export default function CartPage() {
         </div>
       ))}
       {cart.items.length === 0 && <p className="text-gray-500">Your bag is empty.</p>}
-      <p className="text-xl mt-6">Total: ₹{cart.total}</p>
+      <p className="text-xl mt-6">Total: â‚¹{cart.total}</p>
       {cart.items.length > 0 && (
         <Link to="/checkout" className="inline-block mt-4 px-8 py-2.5 bg-[#094cb2] text-white rounded-full text-sm tracking-widest uppercase">
           Secure checkout
         </Link>
       )}
     </div>
+    </>
   );
 }
+
+
+
+
+
+

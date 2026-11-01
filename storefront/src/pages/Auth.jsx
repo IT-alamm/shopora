@@ -1,6 +1,7 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Auth, ASSETS, store } from "../lib/api";
+import SEO from "../components/SEO.jsx";
 
 export default function AuthPage() {
   const nav = useNavigate();
@@ -20,11 +21,13 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-12 grid lg:grid-cols-2 gap-10 items-stretch">
+    <>
+      <SEO title="Account sign in" description="Sign in or create your Shopora account." path="/auth" noindex />
+      <div className="max-w-6xl mx-auto px-6 py-12 grid lg:grid-cols-2 gap-10 items-stretch">
       <img src={ASSETS.authSide} alt="Maison archives" className="rounded-xl object-cover w-full hidden lg:block" />
       <div className="bg-white border border-[#e3e2e3] rounded-xl p-8 shadow-sm">
         <h1 className="font-[Noto_Serif] text-3xl mb-1">{mode === "login" ? "Sign in" : "Register"}</h1>
-        <p className="text-sm text-gray-500 mb-6">Maison authentication — JWT issued by auth-service</p>
+        <p className="text-sm text-gray-500 mb-6">Maison authentication â€” JWT issued by auth-service</p>
         <form onSubmit={submit} className="flex flex-col gap-3">
           {mode === "register" && (
             <>
@@ -42,8 +45,13 @@ export default function AuthPage() {
         <button className="underline text-sm mt-4" onClick={() => setMode(mode === "login" ? "register" : "login")}>
           {mode === "login" ? "New here? Create an account" : "Have an account? Sign in"}
         </button>
-        {store.token && <p className="text-green-700 text-xs mt-3 break-all">JWT saved ✓</p>}
+        {store.token && <p className="text-green-700 text-xs mt-3 break-all">JWT saved âœ“</p>}
       </div>
     </div>
+    </>
   );
 }
+
+
+
+
